@@ -1,0 +1,39 @@
+# OpenTelemetry Collector config for the local stack.
+# Mounted into the otel-collector container by docker-compose.observability.yml.
+#
+# Pipeline: app --OTLP--> collector --traces--> Jaeger
+#                     \--collector metrics--> Prometheus (:8889)
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  # Jaeger speaks OTLP natively (COLLECTOR_OTLP_ENABLED=true); the legacy
+  # "jaeger" exporter type was removed from modern collector builds.
+  otlp:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  prometheus:
+    endpoint: 0.0.0.0:8889
+  debug:
+    verbosity: basic
+
+processors:
+  batch:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp, debug]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus, debug]

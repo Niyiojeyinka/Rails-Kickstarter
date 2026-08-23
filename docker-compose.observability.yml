@@ -1,0 +1,76 @@
+# Local observability stack for development.
+#
+# Start it with:
+#   docker compose -f docker-compose.observability.yml up -d
+#
+# The Rails app runs on the HOST and is reached from containers via
+# host.docker.internal. Full step-by-step guide: docs/OBSERVABILITY.md
+#
+# Services:
+#   otel-collector   receives OTLP traces from the app (:4318), forwards to Jaeger
+#   jaeger           trace storage + search UI (http://localhost:16686)
+#   prometheus       scrapes the app (:9394/metrics) and the collector (:8889)
+#   loki             log aggregation, fed by Promtail (Rails log files)
+#   promtail         tails the app's log/*.log (mounted from the host) into Loki
+#   grafana          dashboards, pre-wired to Prometheus + Jaeger + Loki (http://localhost:3001)
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.118.0
+    command: ["--config=/etc/otel-collector.yaml"]
+    volumes:
+      - ./config/otel/collector.yaml:/etc/otel-collector.yaml:ro
+    ports:
+      # Loopback-only binds: these are local development tools, never
+      # exposed on the LAN. The app reaches the collector on the host.
+      - "127.0.0.1:4317:4317" # OTLP gRPC
+      - "127.0.0.1:4318:4318" # OTLP HTTP (the app sends traces here)
+      - "127.0.0.1:8889:8889" # collector's own Prometheus metrics
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.64.0
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "127.0.0.1:16686:16686" # Jaeger UI (loopback only)
+
+  prometheus:
+    image: prom/prometheus:v3.0.0
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090" # loopback only
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  loki:
+    image: grafana/loki:3.3.2
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "127.0.0.1:3100:3100" # loopback only
+
+  promtail:
+    image: grafana/promtail:3.3.2
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./config/promtail/promtail.yml:/etc/promtail/config.yml:ro
+      # The app runs on the host; tail its log files read-only.
+      - ./log:/logs:ro
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      # 3001 on the host: 3000 is the Rails server. Loopback only.
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      - prometheus
+      - jaeger
+      - loki

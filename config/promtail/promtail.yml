@@ -1,0 +1,25 @@
+# Promtail config for the local stack: tails the Rails log files written by
+# the app on the HOST (mounted read-only at /logs) and pushes them to Loki.
+#
+#   docker compose -f docker-compose.observability.yml up -d
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: rails
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: rails
+          __path__: /logs/*.log
+    # Rails 8 logs are plain lines (no timestamp/level prefix), so no parsing
+    # stages here. Loki auto-adds a detected_level label from line content.

@@ -1,0 +1,13 @@
+# Grafana dashboard provider: loads every dashboard JSON in
+# config/grafana/dashboards/ automatically on container start.
+apiVersion: 1
+
+providers:
+  - name: default
+    orgId: 1
+    folder: ""
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards

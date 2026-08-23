@@ -1,0 +1,20 @@
+/* Whelb admin theme.
+ *
+ * Loaded by app/assets/stylesheets/active_admin.css (keep the @import line
+ * there when regenerating ActiveAdmin assets). The rest of the admin look
+ * uses Tailwind utility classes directly in app/views/admin/**. */
+
+/* Gradient hero on the dashboard */
+.dashboard-hero {
+  background: linear-gradient(120deg, #4f46e5 0%, #7c3aed 45%, #db2777 100%);
+}
+
+/* Lift on hover for stat cards */
+.stat-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.15);
+}

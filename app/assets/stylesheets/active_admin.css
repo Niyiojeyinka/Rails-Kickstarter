@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@config "../../../tailwind-active_admin.config.js";
+
+/* Whelb admin theme (re-add this line if you regenerate ActiveAdmin assets) */
+@import "./active_admin_custom.css";

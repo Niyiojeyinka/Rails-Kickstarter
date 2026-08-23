@@ -1,0 +1,51 @@
+# Production stack: Rails app (built from the Dockerfile) + Postgres.
+#
+#   KICKSTART_DATABASE_PASSWORD=... RAILS_MASTER_KEY=$(cat config/master.key) \
+#     docker compose up -d --build
+#
+# Notes:
+#   - Solid Queue runs inside Puma (SOLID_QUEUE_IN_PUMA=1) — single-server mode.
+#   - Solid Cache / Queue / Cable use their dedicated databases
+#     (CACHE/QUEUE/CABLE_DATABASE_URL → kickstart_production_*).
+#   - `db:prepare` runs on every start (see the web command), so the databases
+#     are created and migrated automatically.
+#   - The observability stack is separate: docker-compose.observability.yml.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: kickstart
+      POSTGRES_PASSWORD: ${KICKSTART_DATABASE_PASSWORD:?set KICKSTART_DATABASE_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kickstart"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build: .
+    environment:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY:?set RAILS_MASTER_KEY}
+      KICKSTART_DATABASE_PASSWORD: ${KICKSTART_DATABASE_PASSWORD}
+      DATABASE_URL: postgres://kickstart:${KICKSTART_DATABASE_PASSWORD}@db:5432/kickstart_production
+      CACHE_DATABASE_URL: postgres://kickstart:${KICKSTART_DATABASE_PASSWORD}@db:5432/kickstart_production_cache
+      QUEUE_DATABASE_URL: postgres://kickstart:${KICKSTART_DATABASE_PASSWORD}@db:5432/kickstart_production_queue
+      CABLE_DATABASE_URL: postgres://kickstart:${KICKSTART_DATABASE_PASSWORD}@db:5432/kickstart_production_cable
+      SOLID_QUEUE_IN_PUMA: "1"
+      # Observability (see docs/OBSERVABILITY.md):
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      METRICS_AUTH_USERNAME: ${METRICS_AUTH_USERNAME:-prometheus}
+      METRICS_AUTH_PASSWORD: ${METRICS_AUTH_PASSWORD:-dev-metrics-password}
+    command: ["/bin/bash", "-lc", "./bin/rails db:prepare && exec ./bin/thrust ./bin/rails server"]
+    ports:
+      - "${WEB_PORT:-8080}:80"
+      - "${METRICS_PORT_EXPOSED:-9394}:9394" # metrics endpoint (basic auth)
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:

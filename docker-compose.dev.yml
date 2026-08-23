@@ -1,0 +1,58 @@
+# Dockerized DEVELOPMENT: full source bind-mounted into a dev image
+# (Dockerfile target "dev" — Ruby + Node + all gems), with hot reload,
+# Tailwind watch, and a dedicated Postgres.
+#
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# The host-based workflow (bin/dev) keeps working exactly as before — this is
+# an alternative, not a replacement. Choose ONE Postgres for 5432: the
+# long-running local container or the db service below (uncomment its ports
+# if you want this one exposed).
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - dev_db_data:/var/lib/postgresql/data
+    # The host already runs a Postgres on 5432 — expose this one only if you
+    # stop that container and want to inspect this database from the host.
+    # ports:
+    #   - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build:
+      context: .
+      target: dev
+    # The live source tree: edits reload without rebuilding the image.
+    volumes:
+      - .:/rails
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      # Send traces to the local observability stack (if running):
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://host.docker.internal:4318}
+      METRICS_AUTH_USERNAME: ${METRICS_AUTH_USERNAME:-prometheus}
+      METRICS_AUTH_PASSWORD: ${METRICS_AUTH_PASSWORD:-dev-metrics-password}
+    command: ["/bin/bash", "-lc", "bin/rails db:prepare && exec bin/dev"]
+    ports:
+      # Change WEB_PORT / METRICS_PORT_EXPOSED if the host is already using
+      # these (e.g. the host-based bin/dev running alongside).
+      - "${WEB_PORT:-3000}:3000"
+      - "${METRICS_PORT_EXPOSED:-9394}:9394" # metrics endpoint (basic auth)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  dev_db_data:

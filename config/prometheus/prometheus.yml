@@ -1,0 +1,22 @@
+# Prometheus config for the local stack.
+# Mounted into the prometheus container by docker-compose.observability.yml.
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  # The Rails app's Yabeda metrics (app runs on the host, port 9394).
+  # The app's metrics endpoint is protected with HTTP Basic auth — keep these
+  # credentials in sync with METRICS_AUTH_USERNAME / METRICS_AUTH_PASSWORD
+  # (see config/initializers/yabeda.rb and docs/OBSERVABILITY.md).
+  - job_name: rails-app
+    basic_auth:
+      username: prometheus
+      password: dev-metrics-password
+    static_configs:
+      - targets: ["host.docker.internal:9394"]
+
+  # The OpenTelemetry Collector's own metrics.
+  - job_name: otel-collector
+    static_configs:
+      - targets: ["otel-collector:8889"]

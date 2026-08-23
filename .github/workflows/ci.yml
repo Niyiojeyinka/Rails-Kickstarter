@@ -99,7 +99,7 @@ jobs:
         run: bin/rails db:test:prepare test
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: coverage/coverage.xml
@@ -143,7 +143,7 @@ jobs:
           fi
 
       - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: screenshots

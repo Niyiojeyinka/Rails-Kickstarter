@@ -154,14 +154,6 @@ GEM
       railties (>= 6.1.0)
     faker (3.8.0)
       i18n (>= 1.8.11, < 2)
-    ffi (1.17.4-aarch64-linux-gnu)
-    ffi (1.17.4-aarch64-linux-musl)
-    ffi (1.17.4-arm-linux-gnu)
-    ffi (1.17.4-arm-linux-musl)
-    ffi (1.17.4-arm64-darwin)
-    ffi (1.17.4-x86_64-darwin)
-    ffi (1.17.4-x86_64-linux-gnu)
-    ffi (1.17.4-x86_64-linux-musl)
     fiber-storage (1.0.1)
     flipper (1.4.2)
       concurrent-ruby (< 2)
@@ -220,9 +212,7 @@ GEM
       activesupport (>= 7.0)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
-    image_processing (1.14.0)
-      mini_magick (>= 4.9.5, < 6)
-      ruby-vips (>= 2.0.17, < 3)
+    image_processing (2.0.3)
     importmap-rails (2.2.3)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -276,8 +266,6 @@ GEM
       net-smtp
     marcel (1.2.1)
     matrix (0.4.3)
-    mini_magick (5.3.3)
-      logger
     mini_mime (1.1.5)
     minitest (6.0.6)
       drb (~> 2.0)
@@ -614,9 +602,6 @@ GEM
       rubocop-rails (>= 2.30)
     ruby-next-core (1.2.1)
     ruby-progressbar (1.13.0)
-    ruby-vips (2.3.0)
-      ffi (~> 1.12)
-      logger
     ruby2_keywords (0.0.5)
     rubyzip (3.5.0)
     sanitize (7.0.0)
@@ -736,7 +721,7 @@ DEPENDENCIES
   flipper-ui (~> 1.4)
   graphiql-rails (~> 1.10)
   graphql (~> 2.5)
-  image_processing (~> 1.2)
+  image_processing (~> 2.0)
   importmap-rails
   jbuilder
   jwt (~> 3.2)

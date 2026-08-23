@@ -11,7 +11,7 @@ API, observability, CI, and tests with coverage — wired and documented.
 ![Ruby 3.4](https://img.shields.io/badge/Ruby-3.4-red)
 ![Rails 8.1](https://img.shields.io/badge/Rails-8.1-cc0000)
 
-## ✨ What's inside
+## What's inside
 
 | Area | Stack |
 |---|---|
@@ -26,7 +26,7 @@ API, observability, CI, and tests with coverage — wired and documented.
 | **Quality** | RuboCop (Omakase) · Brakeman · bundler-audit · Bullet · annotaterb · letter_opener · rack-mini-profiler |
 | **Deploy** | Production Dockerfile (Thruster) + docker-compose for production and dockerized development |
 
-## 📋 Requirements
+## Requirements
 
 - Ruby 3.4.2 (see `.ruby-version`)
 - Node.js + Yarn (Tailwind CSS build)
@@ -54,13 +54,11 @@ docker compose -f docker-compose.dev.yml up --build   # dockerized development
 KICKSTART_DATABASE_PASSWORD=… RAILS_MASTER_KEY=$(cat config/master.key) docker compose up -d --build
 ```
 
-## 📚 Documentation
+## Documentation
 
 - **[docs/OBSERVABILITY.md](docs/OBSERVABILITY.md)** — step-by-step setup for tracing, metrics, and logs (Jaeger, Prometheus, Loki, Grafana), plus production notes
-- **[docs/OBSERVABILITY_PIPELINE.md](docs/OBSERVABILITY_PIPELINE.md)** — how a request becomes a metric in Grafana and a trace in Jaeger, component by component
-- Everything else is documented below and in the code itself (components, feature flags, auth flows).
 
-## 🧩 Architecture in brief
+## Architecture in brief
 
 ### Components (business logic)
 
@@ -100,7 +98,7 @@ User flow:      POST /api/v1/sign_up → sign_in (JWT) → me → sign_out (inst
 Admin flow:     POST /api/v1/admin_sessions (opaque token, shown once) → validate → revoke
 ```
 
-## 🧪 Development & testing
+## Development & testing
 
 ```sh
 bin/rails test            # full suite
@@ -118,11 +116,11 @@ for stubbing.
 Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 All interactions follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## 🔒 Security
+## Security
 
 Please report vulnerabilities privately — see [SECURITY.md](SECURITY.md).
 
-## 📄 License
+## License
 
 Released under the [MIT License](LICENSE).
 

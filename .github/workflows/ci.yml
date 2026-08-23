@@ -135,7 +135,12 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-        run: bin/rails db:test:prepare test:system
+        run: |
+          if [ -d test/system ] && find test/system -name '*_test.rb' -print -quit | grep -q .; then
+            bin/rails db:test:prepare test:system
+          else
+            echo "No system tests found; skipping."
+          fi
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4

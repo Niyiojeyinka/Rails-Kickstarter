@@ -10,15 +10,22 @@
   <div class="dashboard-hero rounded-2xl p-8 text-white shadow-lg">
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div>
-        <p class="text-xs font-medium uppercase tracking-widest text-white/70">Kickstart operations console</p>
-        <h1 class="mt-1 text-3xl font-bold">Welcome back, <%= current_admin_user.email %></h1>
+        <p class="text-xs font-medium uppercase tracking-widest text-white/70"><%= t("admin.dashboard.operations_console") %></p>
+        <h1 class="mt-1 text-3xl font-bold"><%= t("admin.dashboard.welcome", email: current_admin_user.email) %></h1>
         <p class="mt-2 text-sm text-white/80">
-          Rails <%= Rails.version %> · <%= Rails.env %> environment · <%= Time.current.strftime("%H:%M") %>
+          <%= t("admin.dashboard.environment_summary", rails_version: Rails.version, environment: Rails.env, time: l(Time.current, format: :admin_time)) %>
         </p>
       </div>
       <div class="text-right">
-        <p class="text-4xl font-bold tabular-nums"><%= Time.current.strftime("%H:%M") %></p>
-        <p class="mt-1 text-sm text-white/70"><%= Time.current.strftime("%A, %d %B %Y") %></p>
+        <nav class="mb-3 flex justify-end gap-2 text-xs" aria-label="<%= t("admin.language.label") %>">
+          <% I18n.available_locales.each do |locale| %>
+            <%= link_to t("admin.language.#{locale}"), url_for(locale: locale),
+                  lang: locale, aria: { current: ("page" if I18n.locale == locale) },
+                  class: "rounded px-2 py-1 #{I18n.locale == locale ? 'bg-white text-gray-900' : 'bg-white/10 text-white hover:bg-white/20'}" %>
+          <% end %>
+        </nav>
+        <p class="text-4xl font-bold tabular-nums"><%= l(Time.current, format: :admin_time) %></p>
+        <p class="mt-1 text-sm text-white/70"><%= l(Time.current, format: :admin_date) %></p>
       </div>
     </div>
   </div>
@@ -27,46 +34,46 @@
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
     <div class="stat-card rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
       <div class="flex items-center justify-between">
-        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Admin users</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.dashboard.admin_users") %></p>
         <span class="text-xl">👤</span>
       </div>
       <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100"><%= admin_users_count %></p>
       <div class="mt-3">
-        <%= link_to "Manage →", admin_admin_users_path, class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
+        <%= link_to t("admin.dashboard.manage"), admin_admin_users_path, class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
       </div>
     </div>
 
     <div class="stat-card rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
       <div class="flex items-center justify-between">
-        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Feature flags</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.feature_flags.title") %></p>
         <span class="text-xl">🏳️</span>
       </div>
       <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">
         <%= flags.count(&:enabled?) %><span class="text-lg font-medium text-gray-400">/<%= flags.count %></span>
-        <span class="align-middle text-sm font-medium text-gray-500">enabled</span>
+        <span class="align-middle text-sm font-medium text-gray-500"><%= t("admin.feature_flags.enabled") %></span>
       </p>
       <div class="mt-3">
-        <%= link_to "Toggle →", admin_feature_flags_path, class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
+        <%= link_to t("admin.dashboard.toggle"), admin_feature_flags_path, class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
       </div>
     </div>
 
     <div class="stat-card rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
       <div class="flex items-center justify-between">
-        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Admin comments</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.dashboard.admin_comments") %></p>
         <span class="text-xl">💬</span>
       </div>
       <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100"><%= comments_count %></p>
-      <p class="mt-3 text-xs text-gray-400 dark:text-gray-500">Activity across resources</p>
+      <p class="mt-3 text-xs text-gray-400 dark:text-gray-500"><%= t("admin.dashboard.activity_across_resources") %></p>
     </div>
 
     <div class="stat-card rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
       <div class="flex items-center justify-between">
-        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Health</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.dashboard.health") %></p>
         <span class="text-xl">💚</span>
       </div>
-      <p class="mt-2 text-3xl font-bold text-emerald-600 dark:text-emerald-400">Operational</p>
+      <p class="mt-2 text-3xl font-bold text-emerald-600 dark:text-emerald-400"><%= t("admin.dashboard.operational") %></p>
       <div class="mt-3">
-        <%= link_to "Check /up →", "/up", class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
+        <%= link_to t("admin.dashboard.check_health"), "/up", class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
       </div>
     </div>
   </div>
@@ -74,24 +81,24 @@
   <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
     <%# Quick actions %>
     <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick actions</h2>
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.dashboard.quick_actions") %></h2>
       <div class="mt-4 grid gap-2">
-        <%= link_to "＋ New admin user", new_admin_admin_user_path, class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
-        <%= link_to "🏳️ Manage feature flags", admin_feature_flags_path, class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
-        <%= link_to "🎛️ Flipper advanced editor", admin_flipper_path, class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
+        <%= link_to t("admin.dashboard.new_admin_user"), new_admin_admin_user_path, class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
+        <%= link_to t("admin.dashboard.manage_feature_flags"), admin_feature_flags_path, class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
+        <%= link_to t("admin.dashboard.flipper_editor"), admin_flipper_path, class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
       </div>
 
-      <h2 class="mt-8 text-lg font-semibold text-gray-900 dark:text-gray-100">Observability</h2>
+      <h2 class="mt-8 text-lg font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.dashboard.observability") %></h2>
       <div class="mt-4 grid gap-2">
-        <%= link_to "📊 Grafana dashboards", "http://localhost:3001", target: "_blank", rel: "noopener", class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
-        <%= link_to "🔍 Jaeger traces", "http://localhost:16686", target: "_blank", rel: "noopener", class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
-        <%= link_to "📈 Prometheus", "http://localhost:9090", target: "_blank", rel: "noopener", class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
+        <%= link_to t("admin.dashboard.grafana"), "http://localhost:3001", target: "_blank", rel: "noopener", class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
+        <%= link_to t("admin.dashboard.jaeger"), "http://localhost:16686", target: "_blank", rel: "noopener", class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
+        <%= link_to t("admin.dashboard.prometheus"), "http://localhost:9090", target: "_blank", rel: "noopener", class: "rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-800 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
       </div>
     </div>
 
     <%# System panel %>
     <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">System</h2>
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.dashboard.system") %></h2>
       <dl class="mt-4 divide-y divide-gray-100 text-sm dark:divide-gray-800">
         <div class="flex items-center justify-between py-2.5">
           <dt class="text-gray-500 dark:text-gray-400">Rails</dt>
@@ -102,15 +109,15 @@
           <dd class="font-mono text-gray-900 dark:text-gray-100"><%= RUBY_VERSION %></dd>
         </div>
         <div class="flex items-center justify-between py-2.5">
-          <dt class="text-gray-500 dark:text-gray-400">Database</dt>
+          <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.dashboard.database") %></dt>
           <dd class="font-mono text-gray-900 dark:text-gray-100">PostgreSQL <%= pg_version %></dd>
         </div>
         <div class="flex items-center justify-between py-2.5">
-          <dt class="text-gray-500 dark:text-gray-400">Environment</dt>
+          <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.dashboard.environment") %></dt>
           <dd><span class="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/20 dark:bg-indigo-950 dark:text-indigo-400"><%= Rails.env %></span></dd>
         </div>
         <div class="flex items-center justify-between py-2.5">
-          <dt class="text-gray-500 dark:text-gray-400">Time zone</dt>
+          <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.dashboard.time_zone") %></dt>
           <dd class="text-gray-900 dark:text-gray-100"><%= Time.zone %></dd>
         </div>
       </dl>
@@ -120,16 +127,16 @@
   <%# Recent admins %>
   <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
     <div class="flex items-center justify-between">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Recently added admins</h2>
-      <%= link_to "View all →", admin_admin_users_path, class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.dashboard.recent_admins") %></h2>
+      <%= link_to t("admin.dashboard.view_all"), admin_admin_users_path, class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" %>
     </div>
     <div class="mt-4 overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-800">
         <thead>
           <tr class="text-left text-xs font-medium uppercase tracking-wider text-gray-400">
-            <th class="py-2 pr-4">Email</th>
-            <th class="py-2 pr-4">Created</th>
-            <th class="py-2">Updated</th>
+            <th class="py-2 pr-4"><%= t("admin.dashboard.email") %></th>
+            <th class="py-2 pr-4"><%= t("admin.dashboard.created") %></th>
+            <th class="py-2"><%= t("admin.dashboard.updated") %></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
@@ -138,8 +145,8 @@
               <td class="py-2.5 pr-4 font-medium text-gray-900 dark:text-gray-100">
                 <%= link_to admin_user.email, admin_admin_user_path(admin_user), class: "hover:underline" %>
               </td>
-              <td class="py-2.5 pr-4 text-gray-500 dark:text-gray-400"><%= admin_user.created_at.strftime("%d %b %Y %H:%M") %></td>
-              <td class="py-2.5 text-gray-500 dark:text-gray-400"><%= admin_user.updated_at.strftime("%d %b %Y %H:%M") %></td>
+              <td class="py-2.5 pr-4 text-gray-500 dark:text-gray-400"><%= l(admin_user.created_at, format: :admin_timestamp) %></td>
+              <td class="py-2.5 text-gray-500 dark:text-gray-400"><%= l(admin_user.updated_at, format: :admin_timestamp) %></td>
             </tr>
           <% end %>
         </tbody>

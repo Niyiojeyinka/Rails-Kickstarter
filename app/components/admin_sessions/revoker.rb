@@ -9,7 +9,7 @@ class AdminSessions::Revoker < ApplicationComponent
   end
 
   def call
-    return failure("Session is already revoked") if @session.revoked?
+    return failure(I18n.t("components.errors.session_already_revoked")) if @session.revoked?
 
     @session.revoke!
 

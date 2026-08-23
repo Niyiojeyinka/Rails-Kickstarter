@@ -45,6 +45,12 @@ class UserSessionsTest < ActiveSupport::TestCase
     assert_predicate UserSessions::Authenticator.call(expired.token), :failure?
   end
 
+  test "authenticator translates client-facing errors using the current locale" do
+    result = I18n.with_locale(:es) { UserSessions::Authenticator.call(nil) }
+
+    assert_equal "Se requiere un token", result.error
+  end
+
   test "revoker invalidates the JWT immediately" do
     issued = UserSessions::Creator.call(user: users(:one)).value
 

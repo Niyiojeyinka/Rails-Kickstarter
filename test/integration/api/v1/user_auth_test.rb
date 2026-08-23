@@ -22,6 +22,19 @@ class Api::V1::UserAuthTest < ActionDispatch::IntegrationTest
     # Wrong password
     post "/api/v1/sign_in", params: { email: "newbie@example.com", password: "wrong" }, as: :json
     assert_response :unauthorized
+    assert_equal "Invalid email or password", response.parsed_body["error"]
+
+    post "/api/v1/sign_in", params: { email: "newbie@example.com", password: "wrong" },
+      headers: { "Accept-Language" => "en;q=0.5,es-MX;q=1" }, as: :json
+    assert_response :unauthorized
+    assert_equal "Correo electrónico o contraseña no válidos", response.parsed_body["error"]
+    assert_equal "es", response.headers["Content-Language"]
+
+    post "/api/v1/sign_in?locale=en", params: { email: "newbie@example.com", password: "wrong" },
+      headers: { "Accept-Language" => "es" }, as: :json
+    assert_response :unauthorized
+    assert_equal "Invalid email or password", response.parsed_body["error"]
+    assert_equal "en", response.headers["Content-Language"]
 
     # Me with the token
     get "/api/v1/me", headers: { "Authorization" => "Bearer #{token}" }

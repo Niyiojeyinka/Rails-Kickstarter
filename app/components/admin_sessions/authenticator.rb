@@ -10,10 +10,10 @@ class AdminSessions::Authenticator < ApplicationComponent
   end
 
   def call
-    return failure("Token is required") if @raw_token.blank?
+    return failure(I18n.t("components.errors.token_required")) if @raw_token.blank?
 
     session = AdminSession.active.find_by(token_digest: TokenDigest.digest(@raw_token))
-    return failure("Invalid or expired session") unless session
+    return failure(I18n.t("components.errors.invalid_or_expired_session")) unless session
 
     session.touch_seen!
 

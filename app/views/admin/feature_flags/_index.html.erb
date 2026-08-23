@@ -2,22 +2,22 @@
   <div class="flex flex-wrap items-center justify-between gap-3">
     <p class="text-sm text-gray-600 dark:text-gray-400">
       <span class="font-semibold text-gray-900 dark:text-gray-100"><%= features.count %></span>
-      feature<%= "s" unless features.count == 1 %> active ·
+      <%= t("admin.feature_flags.active", count: features.count) %> ·
       <span class="font-semibold text-emerald-600 dark:text-emerald-400"><%= features.count(&:enabled?) %></span>
-      enabled
+      <%= t("admin.feature_flags.enabled") %>
     </p>
-    <%= link_to "Advanced editor", admin_flipper_path,
+    <%= link_to t("admin.feature_flags.advanced_editor"), admin_flipper_path,
           class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700" %>
   </div>
 
   <% if features.none? %>
     <div class="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center dark:border-gray-700 dark:bg-gray-900">
       <p class="text-2xl">🏳️</p>
-      <h3 class="mt-3 text-base font-semibold text-gray-900 dark:text-gray-100">No feature flags active yet</h3>
+      <h3 class="mt-3 text-base font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.feature_flags.empty_title") %></h3>
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-        A flag is created on first use —
+        <%= t("admin.feature_flags.empty_before_code") %>
         <code class="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">FeatureFlag.enabled?(:my_feature)</code>
-        — then it shows up here. Defined but unused flags are listed below.
+        <%= t("admin.feature_flags.empty_after_code") %>
       </p>
     </div>
   <% else %>
@@ -29,11 +29,11 @@
             <h3 class="truncate font-mono text-sm font-semibold text-gray-900 dark:text-gray-100"><%= feature.name %></h3>
             <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium <%= enabled ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950 dark:text-emerald-400" : "bg-gray-100 text-gray-600 ring-1 ring-inset ring-gray-500/20 dark:bg-gray-800 dark:text-gray-400" %>">
               <span class="size-1.5 rounded-full <%= enabled ? "bg-emerald-500" : "bg-gray-400" %>"></span>
-              <%= enabled ? "Enabled" : "Disabled" %>
+              <%= enabled ? t("admin.feature_flags.enabled_status") : t("admin.feature_flags.disabled_status") %>
             </span>
             <% unless FeatureFlag.registered?(feature.name) %>
               <span class="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-950 dark:text-amber-400">
-                Unregistered
+                <%= t("admin.feature_flags.unregistered") %>
               </span>
             <% end %>
           </div>
@@ -44,15 +44,15 @@
             <% rollout = feature.percentage_of_actors_value %>
             <% actors = feature.actors_value %>
             <% groups = feature.groups_value %>
-            <%= "Rollout #{rollout}% · " if rollout.positive? %>
-            <%= "#{actors.size} actor#{'s' unless actors.size == 1} · " if actors.any? %>
-            <%= groups.any? ? "Groups: #{groups.to_a.join(', ')}" : "No gates set" %>
+            <%= "#{t('admin.feature_flags.rollout', percentage: rollout)} · " if rollout.positive? %>
+            <%= "#{t('admin.feature_flags.actors', count: actors.size)} · " if actors.any? %>
+            <%= groups.any? ? t("admin.feature_flags.groups", groups: groups.to_a.join(", ")) : t("admin.feature_flags.no_gates") %>
           </p>
         </div>
         <%= button_to admin_feature_flags_toggle_path(feature: feature.name),
               method: :post,
               class: "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm #{enabled ? "bg-rose-600 hover:bg-rose-500" : "bg-emerald-600 hover:bg-emerald-500"}" do %>
-          <%= enabled ? "Disable" : "Enable" %>
+          <%= enabled ? t("admin.feature_flags.disable") : t("admin.feature_flags.enable") %>
         <% end %>
       </div>
     <% end %>
@@ -61,10 +61,10 @@
   <% defined_unused = FeatureFlag.registry.keys.reject { |name| features.any? { |f| f.name == name.to_s } } %>
   <% if defined_unused.any? %>
     <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
-      <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Defined in code, not yet used</h2>
+      <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.feature_flags.defined_unused") %></h2>
       <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        These flags are registered in <code class="rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-800">config/flags.rb</code>
-        and appear here once the code checks them at least once.
+        <%= t("admin.feature_flags.defined_before_code") %> <code class="rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-800">config/flags.rb</code>
+        <%= t("admin.feature_flags.defined_after_code") %>
       </p>
       <ul class="mt-3 flex flex-wrap gap-2">
         <% defined_unused.each do |name| %>

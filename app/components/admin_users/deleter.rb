@@ -10,7 +10,7 @@ class AdminUsers::Deleter < ApplicationComponent
   end
 
   def call
-    return failure("Admin user has already been deleted") unless @admin_user.persisted?
+    return failure(I18n.t("components.errors.admin_user_already_deleted")) unless @admin_user.persisted?
 
     @admin_user.destroy
 

@@ -35,7 +35,7 @@ API, observability, CI, and tests with coverage — wired and documented.
 ## 🚀 Quick start
 
 ```sh
-git clone https://github.com/OWNER/REPO.git   # update OWNER/REPO
+git clone https://github.com/Niyiojeyinka/Rails-Kickstarter.git   # update OWNER/REPO
 cd REPO
 cp .env.sample .env    # optional — documented defaults for every env var
 bin/setup              # bundle + yarn + create/migrate DB + seed

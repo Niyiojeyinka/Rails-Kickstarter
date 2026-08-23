@@ -7,9 +7,9 @@
 # Flipper UI is mounted at /admin/flipper behind the same admin auth for
 # advanced gate configuration (percentage rolls, actors, groups).
 ActiveAdmin.register_page "Feature Flags" do
-  menu priority: 2, label: "Feature Flags"
+  menu priority: 2, label: proc { I18n.t("admin.feature_flags.title") }
 
-  content title: "Feature Flags" do
+  content title: proc { I18n.t("admin.feature_flags.title") } do
     render partial: "admin/feature_flags/index", locals: { features: Flipper.features.sort_by(&:name) }
   end
 
@@ -18,7 +18,7 @@ ActiveAdmin.register_page "Feature Flags" do
 
     if result.success?
       redirect_back fallback_location: admin_feature_flags_path,
-        notice: "Feature updated."
+        notice: I18n.t("admin.feature_flags.updated")
     else
       redirect_back fallback_location: admin_feature_flags_path,
         alert: result.error

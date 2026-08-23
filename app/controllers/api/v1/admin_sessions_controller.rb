@@ -10,7 +10,7 @@ module Api
       # (the raw token is returned exactly once)
       def create
         admin = AdminUser.find_by(email: params[:email].to_s.strip.downcase)
-        return render_unauthorized("Invalid email or password") unless admin&.valid_password?(params[:password])
+        return render_unauthorized(I18n.t("components.errors.invalid_credentials")) unless admin&.valid_password?(params[:password])
 
         result = AdminSessions::Creator.call(platform_admin: admin, request: request)
         return render_result_error(result) if result.failure?

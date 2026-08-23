@@ -14,6 +14,7 @@ class FeatureFlagTest < ActiveSupport::TestCase
   test "define declares name and description in one place" do
     assert_equal "New checkout flow", FeatureFlag.description(:new_checkout)
     assert_equal "Version 2 of the public API", FeatureFlag.description(:api_v2)
+    assert_equal "Nuevo flujo de pago", I18n.with_locale(:es) { FeatureFlag.description(:new_checkout) }
     assert FeatureFlag.registered?(:new_checkout)
     assert_not FeatureFlag.registered?(:unknown_flag)
   end

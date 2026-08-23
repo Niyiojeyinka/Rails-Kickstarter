@@ -1,0 +1,140 @@
+es:
+  activerecord:
+    models:
+      admin_user: "Usuario administrador"
+      user: "Usuario"
+    attributes:
+      admin_user:
+        email: "Correo electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de contraseña"
+      user:
+        email: "Correo electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de contraseña"
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      blank: "no puede estar en blanco"
+      confirmation: "no coincide"
+      invalid: "no es válido"
+      not_found: "no encontrado"
+      not_saved:
+        one: "1 error impidió guardar este %{resource}:"
+        other: "%{count} errores impidieron guardar este %{resource}:"
+      taken: "ya está en uso"
+      too_long: "es demasiado largo (máximo %{count} caracteres)"
+      too_short: "es demasiado corto (mínimo %{count} caracteres)"
+  application:
+    name: "Backend de Kickstart"
+  pwa:
+    name: "Kickstart"
+    description: "Aplicación Kickstart."
+  feature_flags:
+    descriptions:
+      new_checkout: "Nuevo flujo de pago"
+      dark_mode: "Tema oscuro para áreas autenticadas"
+      api_v2: "Versión 2 de la API pública"
+  devise:
+    failure:
+      already_authenticated: "Ya has iniciado sesión."
+      inactive: "Tu cuenta todavía no está activada."
+      invalid: "%{authentication_keys} o contraseña no válidos."
+      locked: "Tu cuenta está bloqueada."
+      last_attempt: "Tienes un intento más antes de que tu cuenta sea bloqueada."
+      not_found_in_database: "%{authentication_keys} o contraseña no válidos."
+      timeout: "Tu sesión ha caducado. Inicia sesión de nuevo para continuar."
+      unauthenticated: "Debes iniciar sesión para continuar."
+      unconfirmed: "Debes confirmar tu correo electrónico para continuar."
+    mailer:
+      reset_password_instructions:
+        subject: "Instrucciones para restablecer la contraseña"
+      email_changed:
+        subject: "Correo electrónico modificado"
+      password_change:
+        subject: "Contraseña modificada"
+    passwords:
+      no_token: "No puedes acceder a esta página sin usar el enlace completo de un correo de restablecimiento de contraseña."
+      send_instructions: "Recibirás un correo con instrucciones para restablecer tu contraseña en unos minutos."
+      send_paranoid_instructions: "Si tu correo existe en nuestra base de datos, recibirás un enlace para recuperar tu contraseña en unos minutos."
+      updated: "Tu contraseña se ha cambiado correctamente. Ya has iniciado sesión."
+      updated_not_active: "Tu contraseña se ha cambiado correctamente."
+    sessions:
+      signed_in: "Sesión iniciada correctamente."
+      signed_out: "Sesión cerrada correctamente."
+      already_signed_out: "Sesión cerrada correctamente."
+  components:
+    errors:
+      admin_user_already_deleted: "El usuario administrador ya fue eliminado"
+      invalid_credentials: "Correo electrónico o contraseña no válidos"
+      invalid_or_expired_session: "Sesión no válida o caducada"
+      invalid_token: "Token no válido"
+      session_already_revoked: "La sesión ya fue revocada"
+      session_revoked_or_expired: "La sesión fue revocada o ha caducado"
+      token_required: "Se requiere un token"
+      unknown_feature: "Funcionalidad desconocida: %{name}"
+  admin:
+    language:
+      label: "Idioma"
+      en: "Inglés"
+      es: "Español"
+    dashboard:
+      title: "Resumen"
+      operations_console: "Consola de operaciones de Kickstart"
+      welcome: "Te damos la bienvenida, %{email}"
+      environment_summary: "Rails %{rails_version} · entorno %{environment} · %{time}"
+      admin_users: "Usuarios administradores"
+      manage: "Administrar →"
+      toggle: "Configurar →"
+      admin_comments: "Comentarios administrativos"
+      activity_across_resources: "Actividad en todos los recursos"
+      health: "Estado"
+      operational: "Operativo"
+      check_health: "Comprobar /up →"
+      quick_actions: "Acciones rápidas"
+      new_admin_user: "+ Nuevo usuario administrador"
+      manage_feature_flags: "Administrar funcionalidades"
+      flipper_editor: "Editor avanzado de Flipper"
+      observability: "Observabilidad"
+      grafana: "Paneles de Grafana"
+      jaeger: "Trazas de Jaeger"
+      prometheus: "Prometheus"
+      system: "Sistema"
+      database: "Base de datos"
+      environment: "Entorno"
+      time_zone: "Zona horaria"
+      recent_admins: "Administradores añadidos recientemente"
+      view_all: "Ver todos →"
+      email: "Correo electrónico"
+      created: "Creado"
+      updated: "Actualizado"
+    feature_flags:
+      title: "Funcionalidades"
+      updated: "Funcionalidad actualizada."
+      active:
+        one: "funcionalidad activa"
+        other: "funcionalidades activas"
+      enabled: "habilitadas"
+      advanced_editor: "Editor avanzado"
+      empty_title: "Aún no hay funcionalidades activas"
+      empty_before_code: "Una funcionalidad se crea al usarla por primera vez —"
+      empty_after_code: "— y entonces aparece aquí. Las funcionalidades definidas sin usar se muestran abajo."
+      enabled_status: "Habilitada"
+      disabled_status: "Deshabilitada"
+      unregistered: "No registrada"
+      rollout: "Despliegue %{percentage}%"
+      actors:
+        one: "1 actor"
+        other: "%{count} actores"
+      groups: "Grupos: %{groups}"
+      no_gates: "Sin reglas configuradas"
+      disable: "Deshabilitar"
+      enable: "Habilitar"
+      defined_unused: "Definidas en el código, aún sin usar"
+      defined_before_code: "Estas funcionalidades están registradas en"
+      defined_after_code: "y aparecen aquí cuando el código las consulta por primera vez."
+  time:
+    formats:
+      admin_time: "%H:%M"
+      admin_date: "%d/%m/%Y"
+      admin_timestamp: "%d/%m/%Y %H:%M"

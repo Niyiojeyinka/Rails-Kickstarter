@@ -12,7 +12,7 @@ class FeatureFlags::Toggler < ApplicationComponent
 
   def call
     feature = Flipper.feature(@name)
-    return failure("Unknown feature: #{@name}") unless feature.exist?
+    return failure(I18n.t("components.errors.unknown_feature", name: @name)) unless feature.exist?
 
     FeatureFlag.enabled?(@name) ? FeatureFlag.disable(@name) : FeatureFlag.enable(@name)
 

@@ -5,7 +5,7 @@
 #
 # Flags are declared ONCE in config/flags.rb:
 #
-#   FeatureFlag.define(:new_checkout, description: "New checkout flow")
+#   FeatureFlag.define(:new_checkout, description: :"feature_flags.descriptions.new_checkout")
 #
 # Each declaration generates convenience methods on this module:
 #
@@ -51,7 +51,8 @@ module FeatureFlag
     end
 
     def description(name)
-      registry[name.to_sym]
+      description = registry[name.to_sym]
+      description && I18n.t(description)
     end
 
     def registered?(name)

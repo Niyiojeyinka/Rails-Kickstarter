@@ -12,17 +12,17 @@ class UserSessions::Authenticator < ApplicationComponent
   end
 
   def call
-    return failure("Token is required") if @token.blank?
+    return failure(I18n.t("components.errors.token_required")) if @token.blank?
 
     payload = UserSession.decode_jwt(@token)
     session = UserSession.active.find_by(jti: payload["jti"])
-    return failure("Session revoked or expired") unless session
+    return failure(I18n.t("components.errors.session_revoked_or_expired")) unless session
 
     session.touch_seen!
 
     success(session)
   rescue JWT::DecodeError
     # Signature mismatch, malformed token, or expired (ExpiredSignature < DecodeError).
-    failure("Invalid token")
+    failure(I18n.t("components.errors.invalid_token"))
   end
 end

@@ -12,7 +12,7 @@ class Users::Authenticator < ApplicationComponent
 
   def call
     user = ::User.find_by(email: @email.to_s.strip.downcase)
-    return failure("Invalid email or password") unless user&.authenticate(@password)
+    return failure(I18n.t("components.errors.invalid_credentials")) unless user&.authenticate(@password)
 
     success(user)
   end

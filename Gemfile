@@ -50,7 +50,7 @@ gem "bcrypt", "~> 3.1.7"
 gem "jwt", "~> 3.2"
 
 # GraphQL API
-gem "graphql", "~> 2.5"
+gem "graphql", "~> 2.6"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]

@@ -211,7 +211,7 @@ GEM
       google-protobuf (~> 4.26)
     graphiql-rails (1.10.5)
       railties
-    graphql (2.6.9)
+    graphql (2.6.10)
       base64
       fiber-storage
       logger
@@ -731,7 +731,7 @@ DEPENDENCIES
   flipper-active_support_cache_store (~> 1.4)
   flipper-ui (~> 1.4)
   graphiql-rails (~> 1.10)
-  graphql (~> 2.5)
+  graphql (~> 2.6)
   image_processing (~> 2.0)
   importmap-rails
   jbuilder
